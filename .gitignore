@@ -61,7 +61,6 @@ ENV/
 # ===============================
 *.csv
 *.xlsx
-*.json
 
 # ===============================
 # LOG FILES
@@ -101,3 +100,9 @@ smart-learning-backend/python-services/__pycache__/
 # FIREBASE KEYS
 # ===============================
 firebaseServiceAccountKey.json
+
+# Python service environment
+smart-learning-backend/python-services/.env
+
+# React env
+frontend/.env
