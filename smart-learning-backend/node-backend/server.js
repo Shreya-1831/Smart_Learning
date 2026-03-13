@@ -18,7 +18,7 @@ admin.initializeApp({
 });
 
 const db = admin.firestore();
-const PYTHON_API = process.env.PYTHON_API_URL || "http://localhost:5000";
+const PYTHON_API = process.env.PYTHON_API_URL || "https://smart-learning-python-services.onrender.com";
 
 // -----------------------------
 // AUTH ENDPOINT
