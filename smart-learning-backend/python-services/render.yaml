@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: smart-learning-ai
+    runtime: python
+    rootDir: smart-learning-backend/python-services
+    buildCommand: pip install -r requirements.txt
+    startCommand: python main.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.13
