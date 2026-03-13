@@ -50,8 +50,6 @@ ENV/
 # ML MODELS (OPTIONAL)
 # Remove this if you want to upload models
 # ===============================
-*.h5
-*.keras
 *.pt
 *.pth
 *.onnx

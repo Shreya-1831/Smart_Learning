@@ -1,5 +1,5 @@
 Flask==3.0.3
-tensorflow==2.17.0
+tensorflow==2.15.0
 Pillow==10.3.0
 SpeechRecognition==3.10.1
 numpy==1.26.4

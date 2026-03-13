@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
+import os
 
 # Import the Blueprints
 from reading_ai import reading_bp
@@ -18,7 +19,8 @@ app.register_blueprint(wordbot_bp, url_prefix="/wordbot")
 app.register_blueprint(writing_bp, url_prefix="/writing")
 
 # Run the main server
+
 if __name__ == '__main__':
-    print("Starting Flask server on http://localhost:5000")
-    print("Writing practice endpoint is available at http://localhost:5000/writing/predict")
-    app.run(port=5000, debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    print(f"Starting Flask server on port {port}")
+    app.run(host="0.0.0.0", port=port)
