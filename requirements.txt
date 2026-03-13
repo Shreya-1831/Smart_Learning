@@ -1,0 +1,21 @@
+# Core Framework
+Flask==3.0.3
+flask-cors==4.0.0
+
+# Environment Variables
+python-dotenv==1.0.0
+
+# AI/ML
+google-generativeai==0.4.1
+tensorflow==2.15.0
+numpy==1.26.4
+
+# Image Processing
+Pillow==10.3.0
+
+# Audio Processing
+SpeechRecognition==3.10.1
+pydub==0.25.1
+
+# Utilities
+difflib
