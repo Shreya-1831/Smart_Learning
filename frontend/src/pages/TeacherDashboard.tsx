@@ -246,43 +246,56 @@ const TeacherDashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl p-6 text-white shadow-xl">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-semibold opacity-90">Total Students</span>
-              <Users className="h-6 w-6" />
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+            <div className="bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl p-6 text-white shadow-xl">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-semibold opacity-90">Total Students</span>
+                <Users className="h-6 w-6" />
+              </div>
+              <p className="text-4xl font-bold">{totalStudents}</p>
             </div>
-            <p className="text-4xl font-bold">{totalStudents}</p>
-          </div>
 
-          // After wordGame card, add:
-          <div className="col-span-full md:col-span-1 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl p-6 text-white">
-            <h3 className="text-xl font-bold mb-4">📊 Total Activities</h3>
-            <p className="text-4xl font-bold mb-2">{totalActivities}</p>
-            <p className="text-sm opacity-90">Sessions completed by all students</p>
-          </div>
-
-          <div className="bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl p-6 text-white shadow-xl">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-semibold opacity-90">Avg Academic Score</span>
-              <TrendingUp className="h-6 w-6" />
+            <div className="bg-gradient-to-br from-indigo-500 to-blue-500 rounded-2xl p-6 text-white shadow-xl">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-semibold opacity-90">Active Students</span>
+                <Users className="h-6 w-6" />
+              </div>
+              <p className="text-4xl font-bold">{activeStudents}</p>
             </div>
-            <p className="text-4xl font-bold">{avgProgress.toFixed(1)}%</p>
-          </div>
 
-          <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl p-6 text-white shadow-xl">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-semibold opacity-90">Avg Mental Health</span>
-              <Brain className="h-6 w-6" />
+            <div className="bg-gradient-to-br from-purple-500 to-indigo-500 rounded-2xl p-6 text-white shadow-xl">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-semibold opacity-90">Total Activities</span>
+                <TrendingUp className="h-6 w-6" />
+              </div>
+              <p className="text-4xl font-bold">{totalActivities}</p>
+              <p className="text-xs opacity-80 mt-1">All sessions</p>
             </div>
-            <p className="text-4xl font-bold">{avgMentalHealth.toFixed(1)}%</p>
-          </div>
 
-          <div className="bg-gradient-to-br from-red-500 to-orange-500 rounded-2xl p-6 text-white shadow-xl">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-semibold opacity-90">Needs Support</span>
-              <AlertCircle className="h-6 w-6" />
+            <div className="bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl p-6 text-white shadow-xl">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-semibold opacity-90">Avg Academic Score</span>
+                <TrendingUp className="h-6 w-6" />
+              </div>
+              <p className="text-4xl font-bold">{avgProgress.toFixed(1)}%</p>
             </div>
-            <p className="text-4xl font-bold">{mentalHealthNeedsAttention}</p>
+
+            <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl p-6 text-white shadow-xl">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-semibold opacity-90">Avg Mental Health</span>
+                <Brain className="h-6 w-6" />
+              </div>
+              <p className="text-4xl font-bold">{avgMentalHealth.toFixed(1)}%</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-red-500 to-orange-500 rounded-2xl p-6 text-white shadow-xl">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-semibold opacity-90">Needs Support</span>
+                <AlertCircle className="h-6 w-6" />
+              </div>
+              <p className="text-4xl font-bold">{mentalHealthNeedsAttention}</p>
+              <p className="text-xs opacity-80 mt-1">Academic: {needsAttention}</p>
+            </div>
           </div>
         </div>
 
