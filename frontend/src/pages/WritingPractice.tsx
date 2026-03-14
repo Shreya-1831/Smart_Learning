@@ -153,7 +153,7 @@ const WritingPractice = () => {
     const imageBase64 = canvas.toDataURL("image/png").split(",")[1];
 
     try {
-      const verifyResponse = await axios.post(`${PYTHON_API}/writing/predict`, {
+      const verifyResponse = await axios.post(`${API}/api/writing/verify`, {
         image: imageBase64,
       });
 
