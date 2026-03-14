@@ -194,8 +194,8 @@ const TeacherDashboard = () => {
     }
   };
 
-  // const totalActivities = activityStats.writing.total + activityStats.reading.total +
-  //   activityStats.spellBee.total + activityStats.wordGame.total;
+  const totalActivities = activityStats.writing.total + activityStats.reading.total +
+    activityStats.spellBee.total + activityStats.wordGame.total;
 
   // ✅ Prepare chart data with safe access
   const activityAverageData = [
