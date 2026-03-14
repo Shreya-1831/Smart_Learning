@@ -83,10 +83,15 @@ const TeacherDashboard = () => {
     try {
       setLoadingLeaderboard(true);
       const res = await axios.get(`${API}/api/leaderboard`);
-      const data = res.data.map((entry: any, index: number) => ({
-        ...entry,
+
+      // ✅ Fixed: Explicit entry usage
+      const data: LeaderboardEntry[] = res.data.map((entry: any, index: number) => ({
+        userId: entry.userId,
+        name: entry.name,
+        score: entry.score,
         rank: index + 1,
       }));
+
       setLeaderboard(data);
     } catch (error) {
       console.error('Error fetching leaderboard:', error);
@@ -247,6 +252,13 @@ const TeacherDashboard = () => {
               <Users className="h-6 w-6" />
             </div>
             <p className="text-4xl font-bold">{totalStudents}</p>
+          </div>
+
+          // After wordGame card, add:
+          <div className="col-span-full md:col-span-1 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl p-6 text-white">
+            <h3 className="text-xl font-bold mb-4">📊 Total Activities</h3>
+            <p className="text-4xl font-bold mb-2">{totalActivities}</p>
+            <p className="text-sm opacity-90">Sessions completed by all students</p>
           </div>
 
           <div className="bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl p-6 text-white shadow-xl">
