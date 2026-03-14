@@ -262,11 +262,15 @@ const StudentDashboard = () => {
     try {
       const response = await axios.get(`${API}/api/reading/progress/${userData?.uid}`);
 
+      // ✅ BULLETPROOF FIX - handles ALL response cases
+      const readings = Array.isArray(response.data?.readings) ? response.data.readings :
+        Array.isArray(response.data) ? response.data : [];
+
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
-      // const todayReadings = response.data.readings.filter((reading: any) => {
-      const todayReadings = (response.data?.readings || []).filter((reading: any) => {
+      const todayReadings = readings.filter((reading: any) => {
+        if (!reading?.timestamp) return false;
         const readingDate = new Date(reading.timestamp);
         readingDate.setHours(0, 0, 0, 0);
         return readingDate.getTime() === today.getTime();
@@ -274,13 +278,20 @@ const StudentDashboard = () => {
 
       setReadingProgress({
         completedToday: todayReadings.length,
-        totalReadings: response.data.readings.length,
-        recentScores: response.data.readings.slice(0, 3)
+        totalReadings: readings.length,
+        recentScores: readings.slice(0, 3)
       });
     } catch (error) {
       console.error('Error fetching reading progress:', error);
+      // ✅ SAFE FALLBACK
+      setReadingProgress({
+        completedToday: 0,
+        totalReadings: 0,
+        recentScores: []
+      });
     }
   };
+
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -475,8 +486,8 @@ const StudentDashboard = () => {
 
                 <div
                   className={`relative p-6 rounded-lg border-2 transition-all duration-300 ${challengeProgress.completed
-                      ? 'bg-green-50 border-green-300'
-                      : 'bg-gradient-to-br from-purple-50 to-pink-50 border-purple-300'
+                    ? 'bg-green-50 border-green-300'
+                    : 'bg-gradient-to-br from-purple-50 to-pink-50 border-purple-300'
                     }`}
                 >
                   {challengeProgress.completed && (
@@ -510,8 +521,8 @@ const StudentDashboard = () => {
                         <div className="w-full bg-gray-200 rounded-full h-3">
                           <div
                             className={`h-3 rounded-full transition-all duration-500 ${challengeProgress.completed
-                                ? 'bg-green-500'
-                                : 'bg-gradient-to-r from-purple-500 to-pink-500'
+                              ? 'bg-green-500'
+                              : 'bg-gradient-to-r from-purple-500 to-pink-500'
                               }`}
                             style={{ width: `${progressPercentage}%` }}
                           />
