@@ -46,6 +46,7 @@ const ParentDashboard = () => {
   const [mentalHealth, setMentalHealth] = useState<MentalHealthData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const API = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (!userData?.childUid) {
@@ -93,13 +94,13 @@ const ParentDashboard = () => {
       setError(null);
       
       // Fetch academic progress
-      const progressResponse = await fetch(`http://localhost:4000/api/progress/child/${childId}`);
+      const progressResponse = await fetch(`${API}/api/progress/child/${childId}`);
       if (!progressResponse.ok) throw new Error('Failed to fetch progress');
       const progressData = await progressResponse.json();
       setChildProgress(progressData);
       
       // Fetch mental health data
-      const mentalHealthResponse = await fetch(`http://localhost:4000/api/emotional/child/${childId}`);
+      const mentalHealthResponse = await fetch(`${API}/api/emotional/child/${childId}`);
       if (mentalHealthResponse.ok) {
         const mentalHealthData = await mentalHealthResponse.json();
         setMentalHealth(mentalHealthData);
