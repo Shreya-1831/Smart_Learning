@@ -20,7 +20,6 @@ import {
   Radar,
 } from 'recharts';
 
-// ✅ Fixed interface with optional activities
 interface StudentData {
   id: string;
   name: string;
@@ -28,7 +27,7 @@ interface StudentData {
   rollNo?: string;
   mentalAge?: number;
   overallProgress: number;
-  activities?: {  // ✅ Made optional
+  activities?: {
     writing?: { average: number; count: number };
     reading?: { average: number; count: number };
     spellBee?: { average: number; count: number };
@@ -67,7 +66,7 @@ const TeacherDashboard = () => {
   const [activeTab, setActiveTab] = useState<'academic' | 'mental' | 'leaderboard'>('academic');
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loadingLeaderboard, setLoadingLeaderboard] = useState(false);
-  const API = import.meta.env.VITE_API_URL;
+  const API = import.meta.env.VITE_API_URL || "https://smart-learning-node-backend-og.onrender.com";
 
   useEffect(() => {
     fetchStudents();
@@ -83,15 +82,12 @@ const TeacherDashboard = () => {
     try {
       setLoadingLeaderboard(true);
       const res = await axios.get(`${API}/api/leaderboard`);
-
-      // ✅ Fixed: Explicit entry usage
       const data: LeaderboardEntry[] = res.data.map((entry: any, index: number) => ({
         userId: entry.userId,
         name: entry.name,
         score: entry.score,
         rank: index + 1,
       }));
-
       setLeaderboard(data);
     } catch (error) {
       console.error('Error fetching leaderboard:', error);
@@ -105,8 +101,6 @@ const TeacherDashboard = () => {
       setLoading(true);
       const response = await axios.get(`${API}/api/teacher/students`);
       const studentsData = response.data;
-
-      console.log('Fetched students from backend:', studentsData.length, studentsData);
 
       const mentalData: MentalHealthData[] = studentsData.map((student: any) => ({
         id: student.id,
@@ -158,7 +152,6 @@ const TeacherDashboard = () => {
     return `#${rank}`;
   };
 
-  // ✅ Calculate aggregate statistics with safe null checks
   const totalStudents = students.length;
   const activeStudents = students.filter((s) => s.overallProgress > 0).length;
   const needsAttention = students.filter((s) => s.overallProgress < 50 && s.overallProgress > 0).length;
@@ -171,7 +164,6 @@ const TeacherDashboard = () => {
     ? mentalHealthData.reduce((sum, m) => sum + m.mentalHealthScore, 0) / mentalHealthData.length
     : 0;
 
-  // ✅ Calculate activity averages and totals with optional chaining
   const activityStats = {
     writing: {
       average: students.length > 0
@@ -199,10 +191,12 @@ const TeacherDashboard = () => {
     }
   };
 
-  const totalActivities = activityStats.writing.total + activityStats.reading.total +
-    activityStats.spellBee.total + activityStats.wordGame.total;
+  const totalActivities =
+    activityStats.writing.total +
+    activityStats.reading.total +
+    activityStats.spellBee.total +
+    activityStats.wordGame.total;
 
-  // ✅ Prepare chart data with safe access
   const activityAverageData = [
     { name: 'Writing', average: activityStats.writing.average, fill: COLORS.writing },
     { name: 'Reading', average: activityStats.reading.average, fill: COLORS.reading },
@@ -237,6 +231,8 @@ const TeacherDashboard = () => {
   return (
     <div className="min-h-screen py-12 bg-gradient-to-br from-purple-50 to-blue-50">
       <div className="max-w-7xl mx-auto px-4">
+
+        {/* Header */}
         <div className="text-center mb-8">
           <div className="text-6xl mb-4">👨‍🏫</div>
           <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600 mb-2">
@@ -245,73 +241,60 @@ const TeacherDashboard = () => {
           <p className="text-gray-700">Monitor student progress and provide holistic support</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-            <div className="bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl p-6 text-white shadow-xl">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold opacity-90">Total Students</span>
-                <Users className="h-6 w-6" />
-              </div>
-              <p className="text-4xl font-bold">{totalStudents}</p>
+        {/* ✅ CLEAN 6-CARD STATS GRID */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+          <div className="bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl p-6 text-white shadow-xl">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-semibold opacity-90">Total Students</span>
+              <Users className="h-6 w-6" />
             </div>
+            <p className="text-4xl font-bold">{totalStudents}</p>
+          </div>
 
-            <div className="bg-gradient-to-br from-indigo-500 to-blue-500 rounded-2xl p-6 text-white shadow-xl">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold opacity-90">Active Students</span>
-                <Users className="h-6 w-6" />
-              </div>
-              <p className="text-4xl font-bold">{activeStudents}</p>
+          <div className="bg-gradient-to-br from-indigo-500 to-blue-500 rounded-2xl p-6 text-white shadow-xl">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-semibold opacity-90">Active Students</span>
+              <Users className="h-6 w-6" />
             </div>
+            <p className="text-4xl font-bold">{activeStudents}</p>
+          </div>
 
-            <div className="bg-gradient-to-br from-purple-500 to-indigo-500 rounded-2xl p-6 text-white shadow-xl">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold opacity-90">Total Activities</span>
-                <TrendingUp className="h-6 w-6" />
-              </div>
-              <p className="text-4xl font-bold">{totalActivities}</p>
-              <p className="text-xs opacity-80 mt-1">All sessions</p>
+          <div className="bg-gradient-to-br from-purple-500 to-indigo-500 rounded-2xl p-6 text-white shadow-xl">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-semibold opacity-90">Total Activities</span>
+              <TrendingUp className="h-6 w-6" />
             </div>
+            <p className="text-4xl font-bold">{totalActivities}</p>
+            <p className="text-xs opacity-80 mt-1">All sessions</p>
+          </div>
 
-            <div className="bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl p-6 text-white shadow-xl">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold opacity-90">Avg Academic Score</span>
-                <TrendingUp className="h-6 w-6" />
-              </div>
-              <p className="text-4xl font-bold">{avgProgress.toFixed(1)}%</p>
+          <div className="bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl p-6 text-white shadow-xl">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-semibold opacity-90">Avg Academic Score</span>
+              <TrendingUp className="h-6 w-6" />
             </div>
+            <p className="text-4xl font-bold">{avgProgress.toFixed(1)}%</p>
+          </div>
 
-            <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl p-6 text-white shadow-xl">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold opacity-90">Avg Mental Health</span>
-                <Brain className="h-6 w-6" />
-              </div>
-              <p className="text-4xl font-bold">{avgMentalHealth.toFixed(1)}%</p>
+          <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl p-6 text-white shadow-xl">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-semibold opacity-90">Avg Mental Health</span>
+              <Brain className="h-6 w-6" />
             </div>
+            <p className="text-4xl font-bold">{avgMentalHealth.toFixed(1)}%</p>
+          </div>
 
-            <div className="bg-gradient-to-br from-red-500 to-orange-500 rounded-2xl p-6 text-white shadow-xl">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold opacity-90">Needs Support</span>
-                <AlertCircle className="h-6 w-6" />
-              </div>
-              <p className="text-4xl font-bold">{mentalHealthNeedsAttention}</p>
-              <p className="text-xs opacity-80 mt-1">Academic: {needsAttention}</p>
+          <div className="bg-gradient-to-br from-red-500 to-orange-500 rounded-2xl p-6 text-white shadow-xl">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-semibold opacity-90">Needs Support</span>
+              <AlertCircle className="h-6 w-6" />
             </div>
+            <p className="text-4xl font-bold">{mentalHealthNeedsAttention}</p>
+            <p className="text-xs opacity-80 mt-1">Academic: {needsAttention}</p>
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-indigo-500 to-blue-500 rounded-2xl p-6 text-white shadow-xl">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-semibold opacity-90">Active Students</span>
-            <Users className="h-6 w-6" />
-          </div>
-          <p className="text-4xl font-bold">{activeStudents}</p>
-        </div>
-
-        <div className="bg-gradient-to-br from-red-500 to-pink-500 rounded-2xl p-6 text-white shadow-xl">
-          <span className="text-sm">Needs Academic Support</span>
-          <p className="text-4xl font-bold">{needsAttention}</p>
-        </div>
-
+        {/* Tabs */}
         <div className="flex space-x-4 mb-8">
           <button
             onClick={() => setActiveTab('academic')}
@@ -342,6 +325,7 @@ const TeacherDashboard = () => {
           </button>
         </div>
 
+        {/* Academic Tab */}
         {activeTab === 'academic' && (
           <>
             {/* Activity Performance Cards */}
@@ -354,10 +338,7 @@ const TeacherDashboard = () => {
                     <p className="text-sm opacity-90 mb-2">Average</p>
                     <p className="text-4xl font-bold">{activityStats.writing.average.toFixed(1)}%</p>
                     <div className="w-full bg-white/30 rounded-full h-2 mt-3">
-                      <div
-                        className="bg-white h-2 rounded-full transition-all"
-                        style={{ width: `${activityStats.writing.average}%` }}
-                      />
+                      <div className="bg-white h-2 rounded-full transition-all" style={{ width: `${activityStats.writing.average}%` }} />
                     </div>
                   </div>
                   <div className="border-t border-white/30 pt-3">
@@ -372,10 +353,7 @@ const TeacherDashboard = () => {
                     <p className="text-sm opacity-90 mb-2">Average</p>
                     <p className="text-4xl font-bold">{activityStats.reading.average.toFixed(1)}%</p>
                     <div className="w-full bg-white/30 rounded-full h-2 mt-3">
-                      <div
-                        className="bg-white h-2 rounded-full transition-all"
-                        style={{ width: `${activityStats.reading.average}%` }}
-                      />
+                      <div className="bg-white h-2 rounded-full transition-all" style={{ width: `${activityStats.reading.average}%` }} />
                     </div>
                   </div>
                   <div className="border-t border-white/30 pt-3">
@@ -390,10 +368,7 @@ const TeacherDashboard = () => {
                     <p className="text-sm opacity-90 mb-2">Average</p>
                     <p className="text-4xl font-bold">{activityStats.spellBee.average.toFixed(1)}%</p>
                     <div className="w-full bg-white/30 rounded-full h-2 mt-3">
-                      <div
-                        className="bg-white h-2 rounded-full transition-all"
-                        style={{ width: `${activityStats.spellBee.average}%` }}
-                      />
+                      <div className="bg-white h-2 rounded-full transition-all" style={{ width: `${activityStats.spellBee.average}%` }} />
                     </div>
                   </div>
                   <div className="border-t border-white/30 pt-3">
@@ -408,10 +383,7 @@ const TeacherDashboard = () => {
                     <p className="text-sm opacity-90 mb-2">Average</p>
                     <p className="text-4xl font-bold">{activityStats.wordGame.average.toFixed(1)}%</p>
                     <div className="w-full bg-white/30 rounded-full h-2 mt-3">
-                      <div
-                        className="bg-white h-2 rounded-full transition-all"
-                        style={{ width: `${activityStats.wordGame.average}%` }}
-                      />
+                      <div className="bg-white h-2 rounded-full transition-all" style={{ width: `${activityStats.wordGame.average}%` }} />
                     </div>
                   </div>
                   <div className="border-t border-white/30 pt-3">
@@ -422,9 +394,8 @@ const TeacherDashboard = () => {
               </div>
             </div>
 
-            {/* CHARTS SECTION */}
+            {/* Charts */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              {/* Average Performance Bar Chart */}
               <div className="bg-white rounded-2xl shadow-lg p-6">
                 <h2 className="text-xl font-bold text-gray-800 mb-4">Activity Averages</h2>
                 <ResponsiveContainer width="100%" height={300}>
@@ -443,7 +414,6 @@ const TeacherDashboard = () => {
                 </ResponsiveContainer>
               </div>
 
-              {/* Activity Engagement Pie Chart */}
               <div className="bg-white rounded-2xl shadow-lg p-6">
                 <h2 className="text-xl font-bold text-gray-800 mb-4">Activity Distribution</h2>
                 <ResponsiveContainer width="100%" height={300}>
@@ -467,7 +437,6 @@ const TeacherDashboard = () => {
                 </ResponsiveContainer>
               </div>
 
-              {/* Class Performance Radar Chart */}
               <div className="bg-white rounded-2xl shadow-lg p-6">
                 <h2 className="text-xl font-bold text-gray-800 mb-4">Class Performance Overview</h2>
                 <ResponsiveContainer width="100%" height={300}>
@@ -475,19 +444,12 @@ const TeacherDashboard = () => {
                     <PolarGrid />
                     <PolarAngleAxis dataKey="subject" />
                     <PolarRadiusAxis domain={[0, 100]} />
-                    <Radar
-                      name="Average Score"
-                      dataKey="average"
-                      stroke="#8B5CF6"
-                      fill="#8B5CF6"
-                      fillOpacity={0.6}
-                    />
+                    <Radar name="Average Score" dataKey="average" stroke="#8B5CF6" fill="#8B5CF6" fillOpacity={0.6} />
                     <Tooltip />
                   </RadarChart>
                 </ResponsiveContainer>
               </div>
 
-              {/* Student Performance Comparison */}
               {students.length > 0 && (
                 <div className="bg-white rounded-2xl shadow-lg p-6">
                   <h2 className="text-xl font-bold text-gray-800 mb-4">Student Comparison</h2>
@@ -508,7 +470,7 @@ const TeacherDashboard = () => {
               )}
             </div>
 
-            {/* Individual Student Performance Table */}
+            {/* Student Table */}
             <div className="bg-white rounded-2xl shadow-lg p-6">
               <h2 className="text-2xl font-bold text-gray-800 mb-6">Individual Student Performance</h2>
               {loading ? (
@@ -520,7 +482,6 @@ const TeacherDashboard = () => {
                 <div className="text-center py-12">
                   <Users className="h-24 w-24 mx-auto text-gray-300 mb-4" />
                   <p className="text-xl text-gray-600">No students found</p>
-                  <p className="text-sm text-gray-500 mt-2">Check browser console for details</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
@@ -555,10 +516,7 @@ const TeacherDashboard = () => {
                             <div className="flex items-center space-x-2">
                               <span className="text-sm font-bold text-gray-900">{student.overallProgress.toFixed(1)}%</span>
                               <div className="w-24 bg-gray-200 rounded-full h-2">
-                                <div
-                                  className={`h-2 rounded-full ${getProgressColor(student.overallProgress)}`}
-                                  style={{ width: `${student.overallProgress}%` }}
-                                />
+                                <div className={`h-2 rounded-full ${getProgressColor(student.overallProgress)}`} style={{ width: `${student.overallProgress}%` }} />
                               </div>
                             </div>
                           </td>
@@ -566,10 +524,7 @@ const TeacherDashboard = () => {
                             <div className="space-y-1">
                               <div className="flex items-center gap-2">
                                 <div className="flex-1 bg-gray-200 rounded-full h-2.5 w-20">
-                                  <div
-                                    className="bg-gradient-to-r from-purple-400 to-purple-500 h-2.5 rounded-full transition-all"
-                                    style={{ width: `${student.activities?.writing?.average || 0}%` }}
-                                  />
+                                  <div className="bg-gradient-to-r from-purple-400 to-purple-500 h-2.5 rounded-full transition-all" style={{ width: `${student.activities?.writing?.average || 0}%` }} />
                                 </div>
                                 <span className="text-sm font-bold text-purple-600 w-12">{(student.activities?.writing?.average || 0).toFixed(1)}%</span>
                               </div>
@@ -580,10 +535,7 @@ const TeacherDashboard = () => {
                             <div className="space-y-1">
                               <div className="flex items-center gap-2">
                                 <div className="flex-1 bg-gray-200 rounded-full h-2.5 w-20">
-                                  <div
-                                    className="bg-gradient-to-r from-blue-400 to-blue-500 h-2.5 rounded-full transition-all"
-                                    style={{ width: `${student.activities?.reading?.average || 0}%` }}
-                                  />
+                                  <div className="bg-gradient-to-r from-blue-400 to-blue-500 h-2.5 rounded-full transition-all" style={{ width: `${student.activities?.reading?.average || 0}%` }} />
                                 </div>
                                 <span className="text-sm font-bold text-blue-600 w-12">{(student.activities?.reading?.average || 0).toFixed(1)}%</span>
                               </div>
@@ -594,10 +546,7 @@ const TeacherDashboard = () => {
                             <div className="space-y-1">
                               <div className="flex items-center gap-2">
                                 <div className="flex-1 bg-gray-200 rounded-full h-2.5 w-20">
-                                  <div
-                                    className="bg-gradient-to-r from-green-400 to-green-500 h-2.5 rounded-full transition-all"
-                                    style={{ width: `${((student.activities?.spellBee?.average ?? 0) / 4)}%` }}
-                                  />
+                                  <div className="bg-gradient-to-r from-green-400 to-green-500 h-2.5 rounded-full transition-all" style={{ width: `${(student.activities?.spellBee?.average ?? 0) / 4}%` }} />
                                 </div>
                                 <span className="text-sm font-bold text-green-600 w-12">{((student.activities?.spellBee?.average ?? 0) / 4).toFixed(1)}%</span>
                               </div>
@@ -608,10 +557,7 @@ const TeacherDashboard = () => {
                             <div className="space-y-1">
                               <div className="flex items-center gap-2">
                                 <div className="flex-1 bg-gray-200 rounded-full h-2.5 w-20">
-                                  <div
-                                    className="bg-gradient-to-r from-orange-400 to-orange-500 h-2.5 rounded-full transition-all"
-                                    style={{ width: `${student.activities?.wordGame?.average || 0}%` }}
-                                  />
+                                  <div className="bg-gradient-to-r from-orange-400 to-orange-500 h-2.5 rounded-full transition-all" style={{ width: `${student.activities?.wordGame?.average || 0}%` }} />
                                 </div>
                                 <span className="text-sm font-bold text-orange-600 w-12">{(student.activities?.wordGame?.average || 0).toFixed(1)}%</span>
                               </div>
@@ -628,44 +574,32 @@ const TeacherDashboard = () => {
           </>
         )}
 
+        {/* Mental Health Tab */}
         {activeTab === 'mental' && (
           <>
-            {/* Mental Health Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
               <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 shadow-lg border-l-4 border-green-500">
                 <p className="text-sm text-gray-600 mb-1">Students with Good Mental Health</p>
-                <p className="text-3xl font-bold text-green-700">
-                  {mentalHealthData.filter(s => s.mentalHealthScore >= 75).length}
-                </p>
+                <p className="text-3xl font-bold text-green-700">{mentalHealthData.filter(s => s.mentalHealthScore >= 75).length}</p>
                 <p className="text-xs text-gray-500 mt-1">Score ≥ 75%</p>
               </div>
-
               <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-6 shadow-lg border-l-4 border-yellow-500">
                 <p className="text-sm text-gray-600 mb-1">Need Monitoring</p>
-                <p className="text-3xl font-bold text-yellow-700">
-                  {mentalHealthData.filter(s => s.mentalHealthScore >= 50 && s.mentalHealthScore < 75).length}
-                </p>
+                <p className="text-3xl font-bold text-yellow-700">{mentalHealthData.filter(s => s.mentalHealthScore >= 50 && s.mentalHealthScore < 75).length}</p>
                 <p className="text-xs text-gray-500 mt-1">Score 50-74%</p>
               </div>
-
               <div className="bg-gradient-to-br from-red-50 to-pink-50 rounded-2xl p-6 shadow-lg border-l-4 border-red-500">
                 <p className="text-sm text-gray-600 mb-1">Needs Attention</p>
-                <p className="text-3xl font-bold text-red-700">
-                  {mentalHealthData.filter(s => s.mentalHealthScore < 50).length}
-                </p>
+                <p className="text-3xl font-bold text-red-700">{mentalHealthData.filter(s => s.mentalHealthScore < 50).length}</p>
                 <p className="text-xs text-gray-500 mt-1">Score &lt; 50%</p>
               </div>
-
               <div className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl p-6 shadow-lg border-l-4 border-purple-500">
                 <p className="text-sm text-gray-600 mb-1">Total Check-ins</p>
-                <p className="text-3xl font-bold text-purple-700">
-                  {mentalHealthData.reduce((sum, s) => sum + s.totalCheckins, 0)}
-                </p>
+                <p className="text-3xl font-bold text-purple-700">{mentalHealthData.reduce((sum, s) => sum + s.totalCheckins, 0)}</p>
                 <p className="text-xs text-gray-500 mt-1">This month</p>
               </div>
             </div>
 
-            {/* Mental Health Table */}
             <div className="bg-white rounded-2xl shadow-lg p-6">
               <h2 className="text-2xl font-bold text-gray-800 mb-6">Mental Health Overview</h2>
               {loading ? (
@@ -709,26 +643,17 @@ const TeacherDashboard = () => {
                             <div className="flex items-center space-x-2">
                               <span className="text-sm font-bold text-gray-900">{student.mentalHealthScore}%</span>
                               <div className="w-24 bg-gray-200 rounded-full h-2">
-                                <div
-                                  className={`h-2 rounded-full ${getProgressColor(student.mentalHealthScore)}`}
-                                  style={{ width: `${student.mentalHealthScore}%` }}
-                                />
+                                <div className={`h-2 rounded-full ${getProgressColor(student.mentalHealthScore)}`} style={{ width: `${student.mentalHealthScore}%` }} />
                               </div>
                             </div>
                           </td>
-                          <td className="px-6 py-4 text-sm">
-                            {getMoodEmoji(student.recentMood)} {student.recentMood}
-                          </td>
+                          <td className="px-6 py-4 text-sm">{getMoodEmoji(student.recentMood)} {student.recentMood}</td>
                           <td className="px-6 py-4 text-sm text-gray-900">{student.totalCheckins}</td>
                           <td className="px-6 py-4">
                             {student.needsAttention ? (
-                              <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                ⚠️ Needs Attention
-                              </span>
+                              <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">⚠️ Needs Attention</span>
                             ) : (
-                              <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                ✓ Good
-                              </span>
+                              <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">✓ Good</span>
                             )}
                           </td>
                         </tr>
@@ -738,16 +663,11 @@ const TeacherDashboard = () => {
                 </div>
               )}
 
-              {/* Mental Health Charts */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-                {/* Mental Health Score Distribution */}
                 <div className="bg-white rounded-2xl shadow-lg p-6">
                   <h2 className="text-xl font-bold text-gray-800 mb-4">Mental Health Distribution</h2>
                   <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={mentalHealthData.map(student => ({
-                      name: student.name.split(' ')[0],
-                      score: student.mentalHealthScore
-                    }))}>
+                    <BarChart data={mentalHealthData.map(student => ({ name: student.name.split(' ')[0], score: student.mentalHealthScore }))}>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="name" />
                       <YAxis domain={[0, 100]} />
@@ -758,7 +678,6 @@ const TeacherDashboard = () => {
                   </ResponsiveContainer>
                 </div>
 
-                {/* Mood Distribution Pie Chart */}
                 <div className="bg-white rounded-2xl shadow-lg p-6">
                   <h2 className="text-xl font-bold text-gray-800 mb-4">Class Mood Overview</h2>
                   <ResponsiveContainer width="100%" height={300}>
@@ -770,10 +689,7 @@ const TeacherDashboard = () => {
                             const mood = student.recentMood || 'Unknown';
                             moodCounts[mood] = (moodCounts[mood] || 0) + 1;
                           });
-                          return Object.entries(moodCounts).map(([mood, count]) => ({
-                            name: mood,
-                            value: count
-                          }));
+                          return Object.entries(moodCounts).map(([mood, count]) => ({ name: mood, value: count }));
                         })()}
                         cx="50%"
                         cy="50%"
@@ -804,13 +720,13 @@ const TeacherDashboard = () => {
           </>
         )}
 
+        {/* Leaderboard Tab */}
         {activeTab === 'leaderboard' && (
           <div className="bg-white rounded-2xl shadow-lg p-6">
             <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
               <Trophy className="h-8 w-8 mr-3 text-yellow-500" />
               Spell Bee Competition Leaderboard
             </h2>
-
             {loadingLeaderboard ? (
               <div className="text-center py-12">
                 <div className="animate-spin rounded-full h-16 w-16 border-4 border-yellow-500 border-t-transparent mx-auto"></div>
@@ -835,12 +751,9 @@ const TeacherDashboard = () => {
                   </thead>
                   <tbody className="divide-y divide-gray-200">
                     {leaderboard.map((entry) => (
-                      <tr key={entry.userId} className={`hover:bg-yellow-50 transition-colors ${entry.rank <= 3 ? 'bg-yellow-50/50' : ''
-                        }`}>
+                      <tr key={entry.userId} className={`hover:bg-yellow-50 transition-colors ${entry.rank <= 3 ? 'bg-yellow-50/50' : ''}`}>
                         <td className="px-6 py-4">
-                          <span className={`text-3xl font-bold ${getRankColor(entry.rank)}`}>
-                            {getRankIcon(entry.rank)}
-                          </span>
+                          <span className={`text-3xl font-bold ${getRankColor(entry.rank)}`}>{getRankIcon(entry.rank)}</span>
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex items-center">
@@ -858,13 +771,9 @@ const TeacherDashboard = () => {
                         </td>
                         <td className="px-6 py-4">
                           {entry.rank <= 3 ? (
-                            <span className="px-4 py-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                              🌟 Top Performer
-                            </span>
+                            <span className="px-4 py-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">🌟 Top Performer</span>
                           ) : (
-                            <span className="px-4 py-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                              Participant
-                            </span>
+                            <span className="px-4 py-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">Participant</span>
                           )}
                         </td>
                       </tr>
@@ -876,6 +785,7 @@ const TeacherDashboard = () => {
           </div>
         )}
 
+        {/* Footer Insight Cards */}
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-gradient-to-br from-green-100 to-emerald-100 rounded-2xl p-6 shadow-lg">
             <h3 className="text-lg font-bold text-green-700 mb-2">✨ Insight</h3>
@@ -890,6 +800,7 @@ const TeacherDashboard = () => {
             <p className="text-gray-700">Identify students needing extra support in academics or mental health</p>
           </div>
         </div>
+
       </div>
     </div>
   );
