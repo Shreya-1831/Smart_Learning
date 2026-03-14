@@ -214,8 +214,8 @@ const TeacherDashboard = () => {
 
   const studentPerformanceData = students.map(student => ({
     name: student.name.split(' ')[0],
-    Writing: student.activities?.writing?.average || 0,
-    Reading: student.activities?.reading?.average || 0,
+    'Writing': student.activities?.writing?.average || 0,
+    'Reading': student.activities?.reading?.average || 0,
     'Spell Bee': student.activities?.spellBee?.average || 0,
     'Word Game': student.activities?.wordGame?.average || 0,
   }));
@@ -272,6 +272,19 @@ const TeacherDashboard = () => {
             </div>
             <p className="text-4xl font-bold">{mentalHealthNeedsAttention}</p>
           </div>
+        </div>
+
+        <div className="bg-gradient-to-br from-indigo-500 to-blue-500 rounded-2xl p-6 text-white shadow-xl">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-semibold opacity-90">Active Students</span>
+            <Users className="h-6 w-6" />
+          </div>
+          <p className="text-4xl font-bold">{activeStudents}</p>
+        </div>
+
+        <div className="bg-gradient-to-br from-red-500 to-pink-500 rounded-2xl p-6 text-white shadow-xl">
+          <span className="text-sm">Needs Academic Support</span>
+          <p className="text-4xl font-bold">{needsAttention}</p>
         </div>
 
         <div className="flex space-x-4 mb-8">
@@ -558,10 +571,10 @@ const TeacherDashboard = () => {
                                 <div className="flex-1 bg-gray-200 rounded-full h-2.5 w-20">
                                   <div
                                     className="bg-gradient-to-r from-green-400 to-green-500 h-2.5 rounded-full transition-all"
-                                    style={{ width: `${student.activities?.spellBee?.average/4 || 0}%` }}
+                                    style={{ width: `${((student.activities?.spellBee?.average ?? 0) / 4)}%` }}
                                   />
                                 </div>
-                                <span className="text-sm font-bold text-green-600 w-12">{(student.activities?.spellBee?.average/4 || 0).toFixed(1)}%</span>
+                                <span className="text-sm font-bold text-green-600 w-12">{((student.activities?.spellBee?.average ?? 0) / 4).toFixed(1)}%</span>
                               </div>
                               <p className="text-xs text-gray-500">{student.activities?.spellBee?.count || 0} attempts</p>
                             </div>
