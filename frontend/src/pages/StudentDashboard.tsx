@@ -265,7 +265,8 @@ const StudentDashboard = () => {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
-      const todayReadings = response.data.readings.filter((reading: any) => {
+      // const todayReadings = response.data.readings.filter((reading: any) => {
+      const todayReadings = (response.data?.readings || []).filter((reading: any) => {
         const readingDate = new Date(reading.timestamp);
         readingDate.setHours(0, 0, 0, 0);
         return readingDate.getTime() === today.getTime();
