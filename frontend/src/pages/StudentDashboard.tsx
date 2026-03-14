@@ -162,7 +162,7 @@ const StudentDashboard = () => {
     if (!userData) return;
 
     try {
-      const challengesRes = await axios.get('${API}/api/challenges/daily');
+      const challengesRes = await axios.get(`${API}/api/challenges/daily`);
       const allChallenges = challengesRes.data.challenges;
 
       const today = new Date().toISOString().split('T')[0];

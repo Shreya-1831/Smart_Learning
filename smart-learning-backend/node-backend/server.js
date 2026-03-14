@@ -10,9 +10,7 @@ const serviceAccount = require("./firebaseServiceAccountKey.json");
 
 const app = express();
 const corsOptions = {
-  origin: [
-    "https://smart-learning-frontend-jjp8.onrender.com"
-  ],
+  origin: "https://smart-learning-frontend-jjp8.onrender.com",
   methods: ["GET","POST","PUT","DELETE","OPTIONS"],
   allowedHeaders: ["Content-Type","Authorization"],
   credentials: true
