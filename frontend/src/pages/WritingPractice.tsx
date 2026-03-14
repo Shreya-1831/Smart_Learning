@@ -20,7 +20,7 @@ const WritingPractice = () => {
   const [predictedLetter, setPredictedLetter] = useState<string | null>(null);
 
   const PYTHON_API = import.meta.env.VITE_PYTHON_API;
-  const API = import.meta.env.VITE_API_URL || "https://smart-learning-node-backend.onrender.com";
+  const API = import.meta.env.VITE_API_URL || "https://smart-learning-node-backend-og.onrender.com";
 
   const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 
@@ -153,7 +153,7 @@ const WritingPractice = () => {
     const imageBase64 = canvas.toDataURL("image/png").split(",")[1];
 
     try {
-      const verifyResponse = await axios.post(`${API}/writing/predict`, {
+      const verifyResponse = await axios.post(`${API}/api/writing/verify`, {
         image: imageBase64,
       });
 
