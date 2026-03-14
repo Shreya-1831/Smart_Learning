@@ -7,14 +7,15 @@ from PIL import Image, ImageOps
 import os # Import os to check for model file
 
 # --- Model Loading ---
-MODEL_FILE = "Alphabet_Recognition.keras"
+# --- Model Loading ---
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_FILE = os.path.join(SCRIPT_DIR, "Alphabet_Recognition.keras")
 
 # Check if model file exists before trying to load
 if not os.path.exists(MODEL_FILE):
-    print(f"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    print(f"FATAL ERROR: Model file not found.")
-    print(f"Please make sure '{MODEL_FILE}' is in the same directory as this script.")
-    print(f"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    print(f"FATAL ERROR: Model file not found at {MODEL_FILE}")
+    print(f"Current dir: {os.getcwd()}")
+    print(f"Files in script dir: {os.listdir(SCRIPT_DIR)}")
     model = None
 else:
     try:
