@@ -27,7 +27,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));  // Add ()
-app.options('*', cors(corsOptions));  // Fix to '*'
+app.options(/.*/, cors(corsOptions));  // Fix to '*'
 
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
