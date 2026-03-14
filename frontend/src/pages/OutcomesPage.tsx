@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Award, Star, Trophy, Gift, Target, Zap, Lock, Sparkles, PartyPopper } from 'lucide-react';
+import { Award, Star, Trophy, Gift, Target, Zap, Lock, Sparkles} from 'lucide-react';
 import { useAuth } from "../contexts/AuthContext";
 import axios from 'axios';
 
