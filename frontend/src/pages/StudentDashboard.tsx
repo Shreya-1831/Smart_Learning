@@ -60,7 +60,8 @@ const StudentDashboard = () => {
     totalReadings: 0,
     recentScores: []
   });
-  const API = import.meta.env.VITE_API_URL;
+  // const API = import.meta.env.VITE_API_URL;
+  const API = import.meta.env.VITE_API_URL || "https://smart-learning-node-backend-og.onrender.com";
 
   const [dailyChallenge, setDailyChallenge] = useState<Challenge | null>(null);
   const [challengeProgress, setChallengeProgress] = useState<ChallengeProgress>({

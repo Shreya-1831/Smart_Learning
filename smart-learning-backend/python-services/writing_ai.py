@@ -43,7 +43,10 @@ def process_image(image_data):
     """
     try:
         # 1. Decode, convert to grayscale, and invert colors
-        img_data = base64.b64decode(image_data.split(',')[1])
+        if ',' in image_data:
+            img_data = base64.b64decode(image_data.split(',')[1])
+        else:
+            img_data = base64.b64decode(image_data)  # already raw base64
         img = Image.open(io.BytesIO(img_data))
         img = img.convert('L')
         img = ImageOps.invert(img)  # Canvas black-on-white → white-on-black
