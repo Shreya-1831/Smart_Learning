@@ -18,9 +18,8 @@ app.register_blueprint(spellbee_bp, url_prefix="/spellbee")
 app.register_blueprint(wordbot_bp, url_prefix="/wordbot")
 app.register_blueprint(writing_bp, url_prefix="/writing")
 
-# Run the main server
-
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    print(f"Starting Flask server on port {port}")
-    app.run(host="0.0.0.0", port=port)
+    # ✅ FIXED: Render.com PORT (10000)
+    port = int(os.environ.get("PORT", 10000))
+    print(f"🚀 Starting Flask server on port {port}")
+    app.run(host="0.0.0.0", port=port, debug=False)
