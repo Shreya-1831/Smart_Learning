@@ -18,9 +18,9 @@ const WritingPractice = () => {
   const [feedbackStatus, setFeedbackStatus] = useState<'correct' | 'incorrect' | null>(null);
   const [lastEarnedPoints, setLastEarnedPoints] = useState(0);
   const [predictedLetter, setPredictedLetter] = useState<string | null>(null);
-  
+
   const PYTHON_API = import.meta.env.VITE_PYTHON_API;
-  const API = import.meta.env.VITE_API_URL;
+  const API = import.meta.env.VITE_API_URL || "https://smart-learning-node-backend.onrender.com";
 
   const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 
@@ -150,14 +150,20 @@ const WritingPractice = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const imageBase64 = canvas.toDataURL("image/png");
+    const imageBase64 = canvas.toDataURL("image/png").split(",")[1];
 
     try {
       const verifyResponse = await axios.post(`${PYTHON_API}/writing/predict`, {
         image: imageBase64,
       });
 
-      const predictedLetter = verifyResponse.data.predicted_letter;
+      const predictedLetter = verifyResponse.data?.predicted_letter;
+
+      if (!predictedLetter) {
+        console.error("Invalid response from AI:", verifyResponse.data);
+        setFeedbackStatus("incorrect");
+        return;
+      }
       console.log(`AI predicted: ${predictedLetter}, User needs: ${currentLetter}`);
 
       if (predictedLetter.toUpperCase() === currentLetter.toUpperCase()) {
@@ -307,8 +313,8 @@ const WritingPractice = () => {
                     disabled={!!feedbackStatus}
                     aria-label="Use Pen"
                     className={`p-3 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-2 shadow-lg ${tool === 'pen'
-                        ? 'bg-gradient-to-r from-blue-400 to-blue-600 text-white'
-                        : 'bg-white text-gray-600 hover:bg-gray-50'
+                      ? 'bg-gradient-to-r from-blue-400 to-blue-600 text-white'
+                      : 'bg-white text-gray-600 hover:bg-gray-50'
                       } ${!!feedbackStatus ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     <Pen className="h-5 w-5" />
@@ -319,8 +325,8 @@ const WritingPractice = () => {
                     disabled={!!feedbackStatus}
                     aria-label="Use Eraser"
                     className={`p-3 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-2 shadow-lg ${tool === 'eraser'
-                        ? 'bg-gradient-to-r from-red-400 to-red-600 text-white'
-                        : 'bg-white text-gray-600 hover:bg-gray-50'
+                      ? 'bg-gradient-to-r from-red-400 to-red-600 text-white'
+                      : 'bg-white text-gray-600 hover:bg-gray-50'
                       } ${!!feedbackStatus ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     <Eraser className="h-5 w-5" />
