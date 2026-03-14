@@ -150,20 +150,18 @@ const WritingPractice = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    // ✅ FIX 1: Remove "data:image/png;base64," prefix for Python
     const imageBase64 = canvas.toDataURL("image/png").split(",")[1];
 
     try {
-      const verifyResponse = await axios.post(`${API}/api/writing/verify`, {
+      // ✅ FIX 2: Production URLs (your Render services)
+      const verifyResponse = await axios.post("https://smart-learning-python-services.onrender.com/writing/predict", {
         image: imageBase64,
       });
 
-      const predictedLetter = verifyResponse.data?.predicted_letter;
+      // ✅ FIX 3: Safe response access
+      const predictedLetter = verifyResponse.data?.predicted_letter || "";
 
-      if (!predictedLetter) {
-        console.error("Invalid response from AI:", verifyResponse.data);
-        setFeedbackStatus("incorrect");
-        return;
-      }
       console.log(`AI predicted: ${predictedLetter}, User needs: ${currentLetter}`);
 
       if (predictedLetter.toUpperCase() === currentLetter.toUpperCase()) {
@@ -174,9 +172,9 @@ const WritingPractice = () => {
         setFeedbackStatus('correct');
         setPredictedLetter(null);
 
-        // ✅ ONLY NEW CODE - Submit to backend
+        // ✅ FIX 4: Node backend URL
         try {
-          await axios.post(`${API}/api/writing/submit`, {
+          await axios.post("https://smart-learning-node-backend-og.onrender.com/api/writing/submit", {
             userId: userData?.uid || 'guest',
             score: earnedPoints,
             letter: currentLetter,
@@ -185,18 +183,18 @@ const WritingPractice = () => {
         } catch (scoreError) {
           console.warn("Could not save writing progress:", scoreError);
         }
-        // ✅ END NEW CODE
-
       } else {
         setPredictedLetter(predictedLetter);
         setFeedbackStatus('incorrect');
       }
     } catch (predictionError) {
       console.error("Error during prediction:", predictionError);
+      // ✅ Graceful fallback
       setPredictedLetter(null);
       setFeedbackStatus('incorrect');
     }
   };
+
 
   return (
     <div className="min-h-screen py-12">
