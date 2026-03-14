@@ -9,17 +9,29 @@ dotenv.config();
 const serviceAccount = require("./firebaseServiceAccountKey.json");
 
 const app = express();
+// const corsOptions = {
+//   origin: "https://smart-learning-frontend-jjp8.onrender.com",
+//   methods: ["GET","POST","PUT","DELETE","OPTIONS"],
+//   allowedHeaders: ["Content-Type","Authorization"],
+//   credentials: true
+// };
+
+// app.use(cors(corsOptions));
+// app.options(/.*/, cors(corsOptions));
+
 const corsOptions = {
-  origin: "https://smart-learning-frontend-jjp8.onrender.com",
-  methods: ["GET","POST","PUT","DELETE","OPTIONS"],
-  allowedHeaders: ["Content-Type","Authorization"],
+  origin: 'https://smart-learning-frontend-jjp8.onrender.com',  // Fixed URL + quotes
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],  // Array + quotes
+  allowedHeaders: ['Content-Type', 'Authorization'],  // Array + quotes
   credentials: true
 };
 
-app.use(cors(corsOptions));
-app.options(/.*/, cors(corsOptions));
+app.use(cors(corsOptions));  // Add ()
+app.options('*', cors(corsOptions));  // Fix to '*'
+
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
+app.set('trust proxy', 1);  // Render HTTPS fix
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
