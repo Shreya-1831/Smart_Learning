@@ -5,8 +5,9 @@ import { useAuth } from "../contexts/AuthContext"; // ✅ ADD THIS
 
 
 // This is the Node.js server URL
-const API_URL = "http://localhost:4000/api/wordgame/botmove";
-const SAVE_API_URL = "http://localhost:4000/api/wordgame/save"; // ✅ ADD THIS
+const API = import.meta.env.VITE_API_URL;
+const API_URL = `${API}/api/wordgame/botmove`;
+const SAVE_API_URL = `${API}/api/wordgame/save`; // ✅ ADD THIS
 
 
 interface PlacedWord {

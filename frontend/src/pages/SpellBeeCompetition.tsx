@@ -4,7 +4,8 @@ import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from 'react-router-dom';
 
-const API_URL = "http://localhost:4000/api";
+const API = import.meta.env.VITE_API_URL;
+const API_URL = `${API}/api`;
 
 interface Word {
   id: number;

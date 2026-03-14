@@ -8,6 +8,7 @@ Thumbs.db
 # NODE / REACT
 # ===============================
 node_modules/
+dist/
 build/
 .npm
 npm-debug.log*

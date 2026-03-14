@@ -60,6 +60,7 @@ const StudentDashboard = () => {
     totalReadings: 0,
     recentScores: []
   });
+  const API = import.meta.env.VITE_API_URL;
 
   const [dailyChallenge, setDailyChallenge] = useState<Challenge | null>(null);
   const [challengeProgress, setChallengeProgress] = useState<ChallengeProgress>({
@@ -146,7 +147,7 @@ const StudentDashboard = () => {
   const fetchAchievementsData = async () => {
     try {
       setLoadingAchievements(true);
-      const response = await axios.get(`http://localhost:4000/api/achievements/${userData?.uid}`);
+      const response = await axios.get(`${API}/api/achievements/${userData?.uid}`);
       console.log('🏆 Achievements data:', response.data);
       // Get only first 6 for dashboard
       setAchievementsData(response.data.achievements.slice(0, 6));
@@ -161,7 +162,7 @@ const StudentDashboard = () => {
     if (!userData) return;
 
     try {
-      const challengesRes = await axios.get('http://localhost:4000/api/challenges/daily');
+      const challengesRes = await axios.get('${API}/api/challenges/daily');
       const allChallenges = challengesRes.data.challenges;
 
       const today = new Date().toISOString().split('T')[0];
@@ -171,7 +172,7 @@ const StudentDashboard = () => {
 
       setDailyChallenge(selectedChallenge);
 
-      const progressRes = await axios.get(`http://localhost:4000/api/challenges/progress/${userData.uid}`);
+      const progressRes = await axios.get(`${API}/api/challenges/progress/${userData.uid}`);
       const progress = progressRes.data.progress[selectedChallenge.type];
 
       console.log(`📊 Challenge Progress:`, progress);
@@ -210,7 +211,7 @@ const StudentDashboard = () => {
 
   const fetchStudentStats = async () => {
     try {
-      const response = await axios.get(`http://localhost:4000/api/student/stats/${userData?.uid}`);
+      const response = await axios.get(`${API}/api/student/stats/${userData?.uid}`);
       console.log('📊 Student Stats:', response.data);
 
       const newLvl = response.data.level;
@@ -238,7 +239,7 @@ const StudentDashboard = () => {
   const fetchLeaderboard = async () => {
     try {
       setLoadingLeaderboard(true);
-      const res = await axios.get('http://localhost:4000/api/leaderboard');
+      const res = await axios.get(`${API}/api/leaderboard`);
       const data: LeaderboardEntry[] = res.data;
 
       const rankedData = data.map((entry, index) => ({
@@ -259,7 +260,7 @@ const StudentDashboard = () => {
 
   const fetchReadingProgress = async () => {
     try {
-      const response = await axios.get(`http://localhost:4000/api/reading/progress/${userData?.uid}`);
+      const response = await axios.get(`${API}/api/reading/progress/${userData?.uid}`);
 
       const today = new Date();
       today.setHours(0, 0, 0, 0);

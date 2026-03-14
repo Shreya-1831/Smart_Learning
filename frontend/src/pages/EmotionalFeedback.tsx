@@ -11,7 +11,8 @@ const EmotionalFeedback = () => {
   const [weeklyMoods, setWeeklyMoods] = useState<any[]>([]);
   const [saving, setSaving] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-
+  const API = import.meta.env.VITE_API_URL;
+  
   // ... rest of the moods, encouragements, and activities arrays stay the same
 
   const moods = [
@@ -50,7 +51,7 @@ const EmotionalFeedback = () => {
 
   const fetchRecentMoods = async () => {
     try {
-      const response = await axios.get(`http://localhost:4000/api/emotional/child/${userData?.uid}`); // Changed from user?.uid
+      const response = await axios.get(`${API}/api/emotional/child/${userData?.uid}`); // Changed from user?.uid
       setWeeklyMoods(response.data.recentMoods || []);
     } catch (error) {
       console.error('Error fetching mood history:', error);

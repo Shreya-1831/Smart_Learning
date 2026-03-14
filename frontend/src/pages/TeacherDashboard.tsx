@@ -67,6 +67,7 @@ const TeacherDashboard = () => {
   const [activeTab, setActiveTab] = useState<'academic' | 'mental' | 'leaderboard'>('academic');
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loadingLeaderboard, setLoadingLeaderboard] = useState(false);
+  const API = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     fetchStudents();
@@ -81,7 +82,7 @@ const TeacherDashboard = () => {
   const fetchLeaderboard = async () => {
     try {
       setLoadingLeaderboard(true);
-      const res = await axios.get('http://localhost:4000/api/leaderboard');
+      const res = await axios.get(`${API}/api/leaderboard`);
       const data = res.data.map((entry: any, index: number) => ({
         ...entry,
         rank: index + 1,
@@ -97,7 +98,7 @@ const TeacherDashboard = () => {
   const fetchStudents = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:4000/api/teacher/students');
+      const response = await axios.get(`${API}/api/teacher/students`);
       const studentsData = response.data;
 
       console.log('Fetched students from backend:', studentsData.length, studentsData);

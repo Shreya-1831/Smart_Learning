@@ -18,6 +18,9 @@ const WritingPractice = () => {
   const [feedbackStatus, setFeedbackStatus] = useState<'correct' | 'incorrect' | null>(null);
   const [lastEarnedPoints, setLastEarnedPoints] = useState(0);
   const [predictedLetter, setPredictedLetter] = useState<string | null>(null);
+  
+  const PYTHON_API = import.meta.env.VITE_PYTHON_API;
+  const API = import.meta.env.VITE_API_URL;
 
   const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 
@@ -150,7 +153,7 @@ const WritingPractice = () => {
     const imageBase64 = canvas.toDataURL("image/png");
 
     try {
-      const verifyResponse = await axios.post("http://localhost:5000/writing/predict", {
+      const verifyResponse = await axios.post(`${PYTHON_API}/writing/predict`, {
         image: imageBase64,
       });
 
@@ -167,7 +170,7 @@ const WritingPractice = () => {
 
         // ✅ ONLY NEW CODE - Submit to backend
         try {
-          await axios.post("http://localhost:4000/api/writing/submit", {
+          await axios.post(`${API}/api/writing/submit`, {
             userId: userData?.uid || 'guest',
             score: earnedPoints,
             letter: currentLetter,

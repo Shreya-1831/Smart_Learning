@@ -67,7 +67,7 @@ const PronunciationFeedback = ({ feedback }: { feedback: FeedbackWord[] }) => {
 const ReadingPractice = () => {
   // --- FIX 1: 'useAuth' hook moved inside the component ---
   const { userData } = useAuth();
-
+  const API = import.meta.env.VITE_API_URL;
   // --- STATE AND REFS ---
   const [currentPassageIndex, setCurrentPassageIndex] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
@@ -128,7 +128,7 @@ const ReadingPractice = () => {
   const fetchNewPassage = async () => {
     try {
       // --- UPDATED: Pointing back to Node.js server ---
-      const res = await axios.get('http://localhost:4000/api/reading/passage'); 
+      const res = await axios.get(`${API}/api/reading/passage`); 
       
       // --- FIX 2: Add fallbacks to prevent undefined fields ---
       const newPassage: Passage = {
@@ -203,7 +203,7 @@ const ReadingPractice = () => {
         };
 
         // --- UPDATED ENDPOINT: Pointing back to Node.js server ---
-        const res = await axios.post('http://localhost:4000/api/reading/analyze', payload); 
+        const res = await axios.post(`${API}/api/reading/analyze`, payload); 
         
         // --- UPDATED RESPONSE HANDLING ---
         const { 

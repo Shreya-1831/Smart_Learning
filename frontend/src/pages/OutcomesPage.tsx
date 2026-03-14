@@ -44,6 +44,7 @@ const OutcomesPage = () => {
     totalStars: 0,
     completionPercentage: 0
   });
+  const API = import.meta.env.VITE_API_URL;
   const [loading, setLoading] = useState(true);
 
   // ✅ CELEBRATION POPUP STATE
@@ -82,7 +83,7 @@ const OutcomesPage = () => {
   const fetchAchievements = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`http://localhost:4000/api/progressive-achievements/${userData?.uid}`);
+      const response = await axios.get(`${API}/api/progressive-achievements/${userData?.uid}`);
       console.log('🏆 Progressive achievements:', response.data);
 
       const fetchedAchievements = response.data.achievements;
