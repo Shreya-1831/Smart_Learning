@@ -70,7 +70,7 @@ const EmotionalFeedback = () => {
 
     try {
       setSaving(true);
-      await axios.post('http://localhost:4000/api/emotional/save', {
+      await axios.post('https://smart-learning-node-backend-og.onrender.com/api/emotional/save', {
         userId: userData.uid, // Changed from user.uid
         mood: currentMood,
         notes: feedback,
