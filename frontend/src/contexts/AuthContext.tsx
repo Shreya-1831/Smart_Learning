@@ -86,7 +86,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     rollNoOrChildRollNo?: string
   ) => {
     try {
-      const response = await axios.post('http://localhost:4000/api/auth/signup', {
+      const response = await axios.post('https://smart-learning-node-backend-og.onrender.com/api/auth/signup', {
         email,
         password,
         name,
