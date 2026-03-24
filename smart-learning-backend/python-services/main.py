@@ -18,8 +18,12 @@ app.register_blueprint(spellbee_bp, url_prefix="/spellbee")
 app.register_blueprint(wordbot_bp, url_prefix="/wordbot")
 app.register_blueprint(writing_bp, url_prefix="/writing")
 
+# ✅ ADD THIS
+@app.route('/health')
+def health():
+    return {"status": "ok"}, 200
+
 if __name__ == '__main__':
-    # ✅ FIXED: Render.com PORT (10000)
     port = int(os.environ.get("PORT", 10000))
     print(f"🚀 Starting Flask server on port {port}")
     app.run(host="0.0.0.0", port=port, debug=False)
