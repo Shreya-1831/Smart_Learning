@@ -20,7 +20,7 @@ const app = express();
 // app.options(/.*/, cors(corsOptions));
 
 const corsOptions = {
-  origin: 'https://the-smart-learning-platform.vercel.app/',  // Fixed URL + quotes
+  origin: 'https://the-smart-learning-platform.vercel.app',  // Fixed URL + quotes
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],  // Array + quotes
   allowedHeaders: ['Content-Type', 'Authorization'],  // Array + quotes
   credentials: true
